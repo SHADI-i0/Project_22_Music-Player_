@@ -143,6 +143,24 @@ mainAudio.addEventListener("ended", () => {
     }
 });
 
+mainAudio.addEventListener("loadeddata", () => {
+    updateTime(mainAudio.duration, musicDuration)
+    let interval = setInterval(() => {
+        updateTime(mainAudio.currentTime, musicCurrentTime)
+    }, 1000);
+    mainAudio.addEventListener("ended", () => {
+        clearInterval(interval);
+    });
+});
+
+function updateTime(time, element) {
+    let minutes = Math.trunc(time / 60);
+    let seconds = Math.trunc(time % 60);
+    seconds < 10 ?
+        element.innerHTML = `0${minutes}:0${seconds}` :
+        element.innerHTML = `0${minutes}:${seconds}`;
+}
+
 progressArea.addEventListener("click", (e) => {
     let progressWidth = progressArea.clientWidth;
     let clickedOffsetX = e.offsetX;
@@ -155,22 +173,4 @@ mainAudio.addEventListener("timeupdate", (e) => {
     let duration = e.target.duration;
     let progressWidth = (currentTime / duration) * 100;
     progressBar.style.width = `${progressWidth}%`;
-});
-
-mainAudio.addEventListener("loadeddata", () => {
-    let minutes = Math.trunc(mainAudio.duration / 60);
-    let seconds = Math.trunc(mainAudio.duration % 60);
-    musicDuration.innerHTML = `0${minutes}:${seconds}`;
-
-    let interval = setInterval(() => {
-        let minutes = Math.trunc(mainAudio.currentTime / 60);
-        let seconds = Math.trunc(mainAudio.currentTime % 60);
-        seconds < 10 ?
-            (musicCurrentTime.innerHTML = `0${minutes}:0${seconds}`) :
-            (musicCurrentTime.innerHTML = `0${minutes}:${seconds}`);
-    }, 1000);
-
-    mainAudio.addEventListener("ended", () => {
-        clearInterval(interval);
-    });
 });
