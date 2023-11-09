@@ -143,6 +143,20 @@ mainAudio.addEventListener("ended", () => {
     }
 });
 
+progressArea.addEventListener("click", (e) => {
+    let progressWidth = progressArea.clientWidth;
+    let clickedOffsetX = e.offsetX;
+    let songDuration = mainAudio.duration;
+    mainAudio.currentTime = (clickedOffsetX / progressWidth) * songDuration;
+})
+
+mainAudio.addEventListener("timeupdate", (e) => {
+    let currentTime = e.target.currentTime;
+    let duration = e.target.duration;
+    let progressWidth = (currentTime / duration) * 100;
+    progressBar.style.width = `${progressWidth}%`;
+});
+
 mainAudio.addEventListener("loadeddata", () => {
     updateTime(mainAudio.duration, musicDuration)
     let interval = setInterval(() => {
@@ -160,17 +174,3 @@ function updateTime(time, element) {
         element.innerHTML = `0${minutes}:0${seconds}` :
         element.innerHTML = `0${minutes}:${seconds}`;
 }
-
-progressArea.addEventListener("click", (e) => {
-    let progressWidth = progressArea.clientWidth;
-    let clickedOffsetX = e.offsetX;
-    let songDuration = mainAudio.duration;
-    mainAudio.currentTime = (clickedOffsetX / progressWidth) * songDuration;
-})
-
-mainAudio.addEventListener("timeupdate", (e) => {
-    let currentTime = e.target.currentTime;
-    let duration = e.target.duration;
-    let progressWidth = (currentTime / duration) * 100;
-    progressBar.style.width = `${progressWidth}%`;
-});
